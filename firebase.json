@@ -1,0 +1,27 @@
+{
+  "firestore": {
+    "rules": "firebase/firestore.rules",
+    "indexes": "firebase/firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "firebase/storage.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "YOUR_PROJECT_ID",
+          "appId": "YOUR_ANDROID_APP_ID",
+          "fileOutput": "lib/config/firebase_options.dart"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "YOUR_PROJECT_ID",
+          "appId": "YOUR_IOS_APP_ID",
+          "fileOutput": "lib/config/firebase_options.dart"
+        }
+      }
+    }
+  }
+}

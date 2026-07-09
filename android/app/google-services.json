@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "866337359161",
+    "project_id": "resq-meal-d03df",
+    "storage_bucket": "resq-meal-d03df.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866337359161:android:23eab6eb92b90ea5c114e8",
+        "android_client_info": {
+          "package_name": "com.resqmeal.resq_meal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHRJ3vEHg7Y3edoRuBPRZGyUKEVjPFA5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
