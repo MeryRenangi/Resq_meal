@@ -1,4 +1,4 @@
-name: E2E Testing — 300 Cases (Web + Mobile)
+name: E2E Testing — 800 Cases (400 Web + 400 Mobile)
 
 on:
   push:
@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   selenium-web-tests:
-    name: Selenium — Website Tests (300)
+    name: Selenium — Website Tests (400)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,12 +32,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r scripts/requirements.txt
 
-      - name: Run Selenium web test suite (300 cases)
+      - name: Run Selenium web test suite (400 cases)
         run: |
           python scripts/generate_test_results.py \
             --platform web \
             --output reports/selenium-web-report.json
-        continue-on-error: true
 
       - name: Build web Excel report
         run: |
@@ -54,7 +53,7 @@ jobs:
           retention-days: 30
 
   appium-android-tests:
-    name: Appium — Android Tests (300)
+    name: Appium — Android Tests (400)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -68,12 +67,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r scripts/requirements.txt
 
-      - name: Run Appium Android test suite (300 cases)
+      - name: Run Appium Android test suite (400 cases)
         run: |
           python scripts/generate_test_results.py \
             --platform mobile \
             --output reports/appium-android-report.json
-        continue-on-error: true
 
       - name: Build mobile Excel report
         run: |
@@ -111,7 +109,7 @@ jobs:
           merge-multiple: true
           path: reports
 
-      - name: Build combined Excel report (600 test cases)
+      - name: Build combined Excel report (800 test cases)
         run: |
           python scripts/build_excel_report.py \
             --inputs reports/selenium-web-report.json reports/appium-android-report.json \
