@@ -1,0 +1,14 @@
+# Query: saveFcmToken
+# ContextLines: 1
+
+
+
+lib\services\fcm_service.dart:
+  60      try {
+  61:       await profile.saveFcmToken(userId, _token!);
+  62      } catch (e, stack) {
+
+lib\services\user_profile_service.dart:
+  49  
+  50:   Future<void> saveFcmToken(String userId, String token) async {
+  51      await _firebase.usersCollection.doc(userId).update({

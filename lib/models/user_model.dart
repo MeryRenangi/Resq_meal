@@ -1,6 +1,5 @@
 import 'package:resq_meal/models/user_role.dart';
 import 'package:resq_meal/core/firestore_mapper.dart';
-import 'package:resq_meal/models/user_role.dart';
 
 class UserModel {
   const UserModel({

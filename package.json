@@ -1,0 +1,22 @@
+{
+  "name": "resq-meal-web-tests",
+  "version": "1.0.0",
+  "description": "ResQ Meal E2E and Unit Test Suite (800 Test Cases: 400 App + 400 Web)",
+  "main": "index.js",
+  "scripts": {
+    "lint": "flutter analyze",
+    "test": "flutter test",
+    "test:coverage": "flutter test --coverage",
+    "test:e2e": "python scripts/run_all_tests.py",
+    "test:all": "python scripts/run_all_tests.py"
+  },
+  "keywords": [
+    "flutter",
+    "testing",
+    "e2e",
+    "resq-meal",
+    "qa"
+  ],
+  "author": "ResQ Meal QA Automation Team",
+  "license": "MIT"
+}
