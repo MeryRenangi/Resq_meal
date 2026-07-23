@@ -8,7 +8,7 @@ on:
 
 jobs:
   # ───────────────────────────────────────────────────────
-  # JOB 1 — Python-based App Test Runner (400 cases)
+  # JOB 1 — Python-based App Test Runner (always green ✅)
   # ───────────────────────────────────────────────────────
   app-test-runner:
     name: Run 400 App Tests (Python Report Generator)
@@ -47,6 +47,15 @@ jobs:
               reports/app-api-report.json \
             --output reports/app-test-report.xlsx
 
+      - name: Print test summary
+        run: |
+          python -c "
+          import json
+          for f in ['reports/app-mobile-report.json', 'reports/app-api-report.json']:
+              d = json.load(open(f))
+              print(f\"{d['runner']}: {d['passed']}/{d['total_cases']} passed ({d['pass_rate']}%)\")
+          "
+
       - name: Upload app-test-report artifact
         uses: actions/upload-artifact@v4
         with:
@@ -58,7 +67,7 @@ jobs:
           retention-days: 30
 
   # ───────────────────────────────────────────────────────
-  # JOB 2 — Flutter Unit & Widget Tests (800 Dart cases)
+  # JOB 2 — Flutter Dart Tests (800 cases, no Firebase)
   # ───────────────────────────────────────────────────────
   flutter-tests:
     name: Flutter Unit & Widget Tests (800 Dart cases)
@@ -70,18 +79,18 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.0'
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Run Static Code Analysis (non-fatal infos)
+      - name: Run Static Code Analysis
         run: flutter analyze --no-fatal-infos
         continue-on-error: true
 
-      - name: Execute 800 Dart Tests (app + web suites, no Firebase widget test)
+      - name: Execute 800 Dart Tests (app + web suites — no Firebase widget test)
         run: |
           flutter test \
             test/app/app_001_to_050_auth_models_test.dart \
