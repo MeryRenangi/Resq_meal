@@ -41,11 +41,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body>
   <header>
     <h1>ResQ Meal — E2E Test Report</h1>
-    <p>600 automated test cases · Web (Selenium) + Mobile (Appium)</p>
+    <p>1800 automated test cases · Selenium · Appium · API · Validation · Deployment · Load</p>
   </header>
   <main>
     <div class="cards">
-      <div class="card"><h2>Total Cases</h2><div class="value">{total_cases}</div><div class="sub">Web + Mobile</div></div>
+      <div class="card"><h2>Total Cases</h2><div class="value">{total_cases}</div><div class="sub">Across all 6 suites</div></div>
       <div class="card"><h2>Passed</h2><div class="value">{total_passed}</div><div class="sub">{pass_rate}% pass rate</div></div>
       <div class="card"><h2>Failed</h2><div class="value">{total_failed}</div><div class="sub">Requires review</div></div>
       <div class="card"><h2>Generated</h2><div class="value" style="font-size:1rem;padding-top:8px;">{generated_at}</div></div>
@@ -59,6 +59,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       <a href="full-e2e-report.xlsx">Full E2E Report (.xlsx)</a>
       <a href="selenium-web-report.xlsx">Web Report (.xlsx)</a>
       <a href="appium-android-report.xlsx">Mobile Report (.xlsx)</a>
+      <a href="unit-test-report.xlsx">API Report (.xlsx)</a>
+      <a href="validation-test-report.xlsx">Validation Report (.xlsx)</a>
+      <a href="deployment-test-report.xlsx">Deployment Report (.xlsx)</a>
+      <a href="load-test-report.xlsx">Load Report (.xlsx)</a>
     </div>
   </main>
   <footer>ResQ Meal CI · GitHub Actions</footer>
@@ -66,20 +70,32 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
+# All 6 report JSON files produced by generate_test_results.py
+REPORT_FILES = [
+    "selenium-web-report.json",
+    "appium-android-report.json",
+    "unit-test-report.json",
+    "validation-test-report.json",
+    "deployment-test-report.json",
+    "load-test-report.json",
+]
+
 
 def _load_reports(reports_dir: Path) -> list[dict]:
     reports = []
-    for name in ("selenium-web-report.json", "appium-android-report.json"):
+    for name in REPORT_FILES:
         path = reports_dir / name
         if path.exists():
             reports.append(json.loads(path.read_text(encoding="utf-8")))
+        else:
+            print(f"[warn] Report not found, skipping: {path}", file=sys.stderr)
     return reports
 
 
 def build_dashboard(reports_dir: Path, output_dir: Path) -> None:
     reports = _load_reports(reports_dir)
     if not reports:
-        print("No JSON reports found.", file=sys.stderr)
+        print("No JSON reports found in reports directory.", file=sys.stderr)
         sys.exit(1)
 
     total_cases = sum(r["total_cases"] for r in reports)
@@ -89,6 +105,7 @@ def build_dashboard(reports_dir: Path, output_dir: Path) -> None:
 
     rows = []
     for r in reports:
+        fail_class = "fail" if r["failed"] > 0 else "pass"
         rows.append(
             f"<tr>"
             f"<td>{r['platform'].title()} — {r['runner']}</td>"
@@ -96,7 +113,7 @@ def build_dashboard(reports_dir: Path, output_dir: Path) -> None:
             f"<td>{r['device']}</td>"
             f"<td>{r['total_cases']}</td>"
             f"<td class='pass'>{r['passed']}</td>"
-            f"<td class='fail'>{r['failed']}</td>"
+            f"<td class='{fail_class}'>{r['failed']}</td>"
             f"<td>{r['pass_rate']}%</td>"
             f"</tr>"
         )
@@ -117,7 +134,7 @@ def build_dashboard(reports_dir: Path, output_dir: Path) -> None:
     for xlsx in reports_dir.glob("*.xlsx"):
         (output_dir / xlsx.name).write_bytes(xlsx.read_bytes())
 
-    print(f"Dashboard written -> {output_dir / 'index.html'}")
+    print(f"Dashboard written -> {output_dir / 'index.html'} ({len(reports)} suites, {total_cases} cases, {pass_rate}% pass rate)")
 
 
 def main() -> int:

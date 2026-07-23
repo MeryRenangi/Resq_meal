@@ -276,12 +276,44 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r scripts/requirements.txt
 
-      - name: Download all test report artifacts
+      - name: Download selenium-web-report artifact
         uses: actions/download-artifact@v4
         with:
-          pattern: "*-report"
-          merge-multiple: true
+          name: selenium-web-report
           path: reports
+
+      - name: Download appium-android-report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: appium-android-report
+          path: reports
+
+      - name: Download unit-test-report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: unit-test-report
+          path: reports
+
+      - name: Download validation-test-report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: validation-test-report
+          path: reports
+
+      - name: Download deployment-test-report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-test-report
+          path: reports
+
+      - name: Download load-test-report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: load-test-report
+          path: reports
+
+      - name: List downloaded reports
+        run: ls -la reports/
 
       - name: Build combined master Excel report (1800 test cases)
         run: |
